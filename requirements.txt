@@ -1,0 +1,29 @@
+# Cycling Calories ML - Wymagane biblioteki
+# Instalacja: pip install -r requirements.txt
+
+# Podstawowe biblioteki do analizy danych
+pandas>=2.0.0
+numpy>=1.24.0
+
+# HTTP requests do API Strava
+requests>=2.31.0
+
+# Konfiguracja YAML
+PyYAML>=6.0
+
+# Wizualizacje
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Machine Learning
+scikit-learn>=1.3.0
+joblib>=1.3.0
+scipy>=1.11.0
+
+# Zaawansowane modele ML (opcjonalne, ale zalecane)
+xgboost>=2.0.0
+lightgbm>=4.0.0
+
+# Opcjonalne (do deep learning)
+# tensorflow>=2.13.0
+# torch>=2.0.0

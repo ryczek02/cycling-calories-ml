@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Dane
+data/raw/*
+data/processed/*
+data/ml_ready/*
+data/visualizations/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/ml_ready/.gitkeep
+!data/visualizations/.gitkeep
+
+# Modele
+models/*
+!models/.gitkeep
+
+# Konfiguracja (z wrażliwymi danymi)
+config/config.yaml
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Logi
+*.log
+
+# Inne
+.env
+*.pkl
+*.h5
+*.pth

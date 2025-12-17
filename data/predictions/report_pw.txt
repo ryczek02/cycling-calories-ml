@@ -1,0 +1,49 @@
+======================================================================
+RAPORT PREDYKCJI SPALONYCH KALORII
+======================================================================
+
+Plik GPX: pw.gpx
+Model: data/ml_models/lightgbm.pkl
+Waga sportowca: 80 kg
+
+CHARAKTERYSTYKA TRASY
+----------------------------------------------------------------------
+Dystans całkowity:        27.30 km
+Przewyższenie (↑):        67 m
+Zjazd (↓):                69 m
+Czas trwania:             134 min (2.2 h)
+
+PRĘDKOŚĆ
+----------------------------------------------------------------------
+Średnia prędkość:         17.4 km/h
+Maksymalna prędkość:      44.4 km/h
+
+NACHYLENIE
+----------------------------------------------------------------------
+Średnie nachylenie:       -0.04%
+Maksymalne nachylenie:    16.11%
+Minimalne nachylenie:     -47.93%
+Przewyższenie na km:      2.5 m/km
+
+======================================================================
+WYNIK PREDYKCJI
+======================================================================
+🔥 Przewidywane spalenie: 403 kcal
+======================================================================
+
+DOKŁADNOŚĆ MODELU
+----------------------------------------------------------------------
+MAE (błąd średni):        36.33 kcal
+RMSE:                     67.43 kcal
+R² (dopasowanie):         -0.7221
+MAPE (błąd %):            35.43%
+
+UWAGI
+----------------------------------------------------------------------
+- Predykcja oparta na modelu uczenia maszynowego
+- Rzeczywiste spalenie może się różnić w zależności od:
+  * kondycji fizycznej
+  * warunków pogodowych
+  * typu roweru
+  * oporu powietrza
+  * techniki jazdy

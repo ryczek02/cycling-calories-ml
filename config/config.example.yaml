@@ -1,0 +1,58 @@
+# Przykładowy plik konfiguracyjny
+# Skopiuj ten plik do config.yaml i wypełnij swoimi danymi
+
+strava:
+  # Access token ze Strava API
+  # Instrukcja generowania znajduje się w README.md
+  access_token: "TWOJ_ACCESS_TOKEN_TUTAJ"
+
+  # Client ID i Client Secret (potrzebne do odświeżania tokenu)
+  client_id: "TWOJ_CLIENT_ID"
+  client_secret: "TWOJ_CLIENT_SECRET"
+
+  # Refresh token (do automatycznego odświeżania access token)
+  refresh_token: "TWOJ_REFRESH_TOKEN"
+
+# Ustawienia pobierania danych
+data_collection:
+  # Maksymalna liczba aktywności do pobrania (null = wszystkie)
+  max_activities: null
+
+  # Czy pobierać szczegółowe strumienie danych (GPS, tętno, etc.)
+  include_streams: true
+
+  # Opóźnienie między requestami (sekundy) - zapobiega rate limiting
+  request_delay: 0.5
+
+# Ustawienia przetwarzania danych
+data_processing:
+  # Minimalny czas trwania treningu (minuty)
+  min_duration_minutes: 5
+
+  # Minimalny dystans (km)
+  min_distance_km: 2
+
+  # Maksymalna dopuszczalna prędkość średnia (km/h)
+  max_average_speed_kmh: 70
+
+# Ustawienia uczenia maszynowego
+machine_learning:
+  # Proporcja zbioru testowego (0.2 = 20%)
+  test_size: 0.2
+
+  # Seed dla powtarzalności wyników
+  random_state: 42
+
+  # Czy normalizować cechy
+  scale_features: true
+
+# Ustawienia wizualizacji
+visualization:
+  # Rozdzielczość wykresów (DPI)
+  dpi: 300
+
+  # Rozmiar figury (szerokość, wysokość w calach)
+  figure_size: [14, 10]
+
+  # Styl wykresów (seaborn style)
+  style: "whitegrid"

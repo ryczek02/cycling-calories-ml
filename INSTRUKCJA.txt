@@ -1,0 +1,257 @@
+================================================================================
+    CYCLING CALORIES ML - INSTRUKCJA OBSŁUGI
+    Predykcja spalania kalorii przez rowerzystów
+    Autor: Łukasz Ryczko (14621)
+================================================================================
+
+PRZYGOTOWANIE ŚRODOWISKA
+================================================================================
+
+1. Zainstaluj Python 3.8 lub nowszy
+   https://www.python.org/downloads/
+
+2. Otwórz terminal/wiersz poleceń i przejdź do katalogu projektu:
+   cd cycling_calories_ml
+
+3. Zainstaluj wymagane biblioteki:
+   pip install -r requirements.txt
+
+
+KONFIGURACJA STRAVA API
+================================================================================
+
+KROK 1: Utwórz aplikację Strava
+------------------------------------------------------------------------
+1. Zaloguj się na Strava: https://www.strava.com
+2. Przejdź do: https://www.strava.com/settings/api
+3. Kliknij "Create an App" lub "My API Application"
+4. Wypełnij formularz:
+   - Application Name: Cycling Calories ML
+   - Category: Data Importer
+   - Website: http://localhost
+   - Authorization Callback Domain: localhost
+5. Kliknij "Create"
+6. ZAPISZ Client ID i Client Secret
+
+KROK 2: Wygeneruj Access Token
+------------------------------------------------------------------------
+1. W przeglądarce otwórz URL (zamień YOUR_CLIENT_ID):
+
+https://www.strava.com/oauth/authorize?client_id=YOUR_CLIENT_ID&response_type=code&redirect_uri=http://localhost&approval_prompt=force&scope=activity:read_all
+
+2. Kliknij "Authorize"
+3. Skopiuj "code" z URL (np. http://localhost/?code=XXXXXX)
+4. W terminalu wykonaj (zamień wartości):
+
+curl -X POST https://www.strava.com/oauth/token \
+  -d client_id=YOUR_CLIENT_ID \
+  -d client_secret=YOUR_CLIENT_SECRET \
+  -d code=YOUR_CODE \
+  -d grant_type=authorization_code
+
+5. Skopiuj otrzymany "access_token" i "refresh_token"
+
+KROK 3: Skonfiguruj plik config.yaml
+------------------------------------------------------------------------
+1. Skopiuj przykładowy plik:
+   cp config/config.example.yaml config/config.yaml
+
+2. Edytuj config/config.yaml i wklej swoje dane:
+   - access_token
+   - client_id
+   - client_secret
+   - refresh_token
+
+
+URUCHOMIENIE PROGRAMU
+================================================================================
+
+OPCJA 1: Pełny automatyczny pipeline (zalecane)
+------------------------------------------------------------------------
+python main.py --all
+
+To uruchomi wszystkie 4 kroki:
+  ✓ Pobieranie danych ze Strava
+  ✓ Przetwarzanie danych
+  ✓ Tworzenie wizualizacji
+  ✓ Przygotowanie danych ML
+
+
+OPCJA 2: Uruchamianie kroków osobno
+------------------------------------------------------------------------
+python main.py --step 1    # Pobieranie danych ze Strava
+python main.py --step 2    # Przetwarzanie danych
+python main.py --step 3    # Tworzenie wizualizacji
+python main.py --step 4    # Przygotowanie danych ML
+
+
+OPCJA 3: Uruchamianie modułów bezpośrednio
+------------------------------------------------------------------------
+python -m src.strava_client      # Pobieranie
+python -m src.data_processor     # Przetwarzanie
+python -m src.visualization      # Wizualizacje
+python -m src.ml_preparation     # Przygotowanie ML
+
+
+GDZIE ZNAJDĘ WYNIKI?
+================================================================================
+
+data/raw/
+  ├── athlete_info.json                    # Informacje o koncie
+  ├── strava_cycling_activities.json       # Lista aktywności
+  └── strava_detailed_activities.json      # Szczegółowe dane
+
+data/processed/
+  └── processed_activities.csv             # Pełny zbiór danych
+
+data/visualizations/
+  ├── heatmap_distance_elevation_calories.png
+  ├── heatmap_speed_time_calories.png
+  ├── heatmap_distance_speed_calories.png
+  ├── correlation_heatmap.png
+  ├── distribution_plots.png
+  ├── scatter_plots.png
+  └── time_series_plot.png
+
+data/ml_ready/
+  ├── X_train.csv              # Cechy treningowe (nieskalowane)
+  ├── X_test.csv               # Cechy testowe (nieskalowane)
+  ├── X_train_scaled.csv       # Cechy treningowe (skalowane)
+  ├── X_test_scaled.csv        # Cechy testowe (skalowane)
+  ├── y_train.csv              # Etykiety treningowe
+  ├── y_test.csv               # Etykiety testowe
+  ├── scaler.pkl               # Obiekt do normalizacji
+  ├── feature_names.txt        # Lista cech
+  └── data_info.txt            # Szczegółowy opis
+
+
+TRENOWANIE MODELI ML
+================================================================================
+
+Po przygotowaniu danych możesz wytrenować modele ML:
+
+python example_train_model.py
+
+Ten skrypt:
+  ✓ Wczytuje przygotowane dane
+  ✓ Trenuje 3 modele (Linear Regression, Random Forest, Gradient Boosting)
+  ✓ Porównuje ich wydajność
+  ✓ Tworzy wykresy predykcji i istotności cech
+
+
+RĘCZNE TRENOWANIE WŁASNYCH MODELI
+================================================================================
+
+Dla modeli drzewiastych (Random Forest, XGBoost, LightGBM):
+------------------------------------------------------------------------
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+
+X_train = pd.read_csv("data/ml_ready/X_train.csv")
+X_test = pd.read_csv("data/ml_ready/X_test.csv")
+y_train = pd.read_csv("data/ml_ready/y_train.csv").values.ravel()
+y_test = pd.read_csv("data/ml_ready/y_test.csv").values.ravel()
+
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+
+Dla modeli liniowych, SVM, sieci neuronowych:
+------------------------------------------------------------------------
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+
+X_train = pd.read_csv("data/ml_ready/X_train_scaled.csv")
+X_test = pd.read_csv("data/ml_ready/X_test_scaled.csv")
+y_train = pd.read_csv("data/ml_ready/y_train.csv").values.ravel()
+y_test = pd.read_csv("data/ml_ready/y_test.csv").values.ravel()
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+
+ROZWIĄZYWANIE PROBLEMÓW
+================================================================================
+
+Problem: FileNotFoundError: config/config.yaml
+------------------------------------------------------------------------
+Rozwiązanie:
+  cp config/config.example.yaml config/config.yaml
+  # Następnie edytuj i dodaj swoje dane
+
+
+Problem: Błąd API 401 Unauthorized
+------------------------------------------------------------------------
+Przyczyna: Nieprawidłowy lub wygasły Access Token
+Rozwiązanie: Wygeneruj nowy token (patrz KROK 2 powyżej)
+
+
+Problem: Nie znaleziono pliku z danymi
+------------------------------------------------------------------------
+Rozwiązanie: Uruchom kroki po kolei:
+  python main.py --step 1
+  python main.py --step 2
+  python main.py --step 3
+  python main.py --step 4
+
+
+Problem: ModuleNotFoundError
+------------------------------------------------------------------------
+Rozwiązanie:
+  pip install -r requirements.txt
+
+
+Problem: Mało danych treningowych
+------------------------------------------------------------------------
+Przyczyna: Nowe konto Strava lub mało aktywności
+Rozwiązanie: Zaimportuj więcej treningów do Strava
+
+
+STRUKTURA PROJEKTU
+================================================================================
+
+cycling_calories_ml/
+├── README.md              # Pełna dokumentacja
+├── QUICK_START.md         # Szybki start
+├── INSTRUKCJA.txt         # Ten plik
+├── requirements.txt       # Wymagane biblioteki
+├── main.py                # Główny skrypt
+├── example_train_model.py # Przykład treningu modelu
+├── .gitignore             # Git ignore
+│
+├── config/
+│   ├── config.example.yaml
+│   └── config.yaml        # Twoja konfiguracja
+│
+├── src/
+│   ├── __init__.py
+│   ├── strava_client.py
+│   ├── data_processor.py
+│   ├── visualization.py
+│   └── ml_preparation.py
+│
+├── data/
+│   ├── raw/
+│   ├── processed/
+│   ├── ml_ready/
+│   └── visualizations/
+│
+├── models/
+└── notebooks/
+
+
+WSPARCIE
+================================================================================
+
+Szczegółowe instrukcje: README.md
+Szybki start: QUICK_START.md
+Dokumentacja kodu: Komentarze w plikach .py
+
+
+POWODZENIA! 🚴‍♂️📊🤖
+
+================================================================================
