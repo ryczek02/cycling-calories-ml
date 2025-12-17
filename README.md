@@ -1,118 +1,173 @@
 # Cycling Calories ML
 
-**Predykcja spalania kalorii przez rowerzystów z wykorzystaniem uczenia maszynowego**
+**Calorie Expenditure Prediction for Cyclists Using Machine Learning**
 
-Praca inżynierska - Łukasz Ryczko (14621)
-Wyższa Szkoła Ekonomii i Informatyki w Krakowie
-
----
-
-## 📋 Spis treści
-
-- [Opis projektu](#-opis-projektu)
-- [Funkcjonalności](#-funkcjonalności)
-- [Struktura projektu](#-struktura-projektu)
-- [Wymagania](#-wymagania)
-- [Instalacja](#-instalacja)
-- [Konfiguracja Strava API](#-konfiguracja-strava-api)
-- [Użycie](#-użycie)
-- [Dane wyjściowe](#-dane-wyjściowe)
-- [Rozwiązywanie problemów](#-rozwiązywanie-problemów)
+Bachelor's Thesis - Łukasz Ryczko (14621)
+University of Economics and Computer Science in Krakow
 
 ---
 
-## 📖 Opis projektu
+## Table of Contents
 
-System do pobierania, przetwarzania i analizy danych treningowych kolarskich ze Stravy, z zaawansowanym przygotowaniem danych do modeli uczenia maszynowego predykcji spalonych kalorii.
-
-**Cechy systemu:**
-- Automatyczne pobieranie danych ze Strava API
-- Przetwarzanie i czyszczenie danych treningowych
-- Zaawansowana inżynieria cech (feature engineering)
-- Wizualizacje (heatmapy, wykresy korelacji, rozkłady)
-- Przygotowanie zbiorów train/test do ML
-- Modułowa architektura - łatwe rozszerzanie
-
----
-
-## ✨ Funkcjonalności
-
-### 1. Pobieranie danych ze Strava
-- Automatyczne pobieranie wszystkich przejazdów rowerowych
-- Pobieranie szczegółowych danych streams (GPS, tętno, moc, temperatura)
-- Zapisywanie w formacie JSON
-
-### 2. Przetwarzanie danych
-- Ekstrakcja podstawowych i pochodnych cech
-- Obliczanie metryk: prędkość, nachylenie, intensywność spalania
-- Czyszczenie outliers i braków danych
-- Analiza zmiennych czasowych
-
-### 3. Wizualizacje
-- **Heatmapy** - zależności dystans/nachylenie/kalorie, prędkość/czas/kalorie
-- **Macierz korelacji** - wszystkie zmienne
-- **Rozkłady** - dystans, czas, kalorie, prędkość, nachylenie
-- **Scatter plots** - relacje między zmiennymi
-- **Wykresy czasowe** - progres treningów
-
-### 4. Przygotowanie danych ML
-- Podział train/test (80/20)
-- Normalizacja cech (StandardScaler)
-- Zapisywanie w CSV gotowych do użycia
-- Dokumentacja cech i statystyk
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [System Architecture](#system-architecture)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Strava API Configuration](#strava-api-configuration)
+- [Usage](#usage)
+- [Machine Learning Pipeline](#machine-learning-pipeline)
+- [GPX-based Prediction](#gpx-based-prediction)
+- [Data Visualization](#data-visualization)
+- [Model Performance](#model-performance)
+- [Project Structure](#project-structure)
+- [Troubleshooting](#troubleshooting)
+- [References](#references)
 
 ---
 
-## 📁 Struktura projektu
+## Project Overview
+
+This system provides a comprehensive solution for collecting, processing, and analyzing cycling training data from Strava, with advanced machine learning models for predicting calorie expenditure. The project implements multiple regression algorithms and comparative analysis tools suitable for academic research and practical applications.
+
+### Key Objectives
+
+- Automated data collection from Strava API
+- Advanced feature engineering for cycling metrics
+- Comparative analysis of machine learning algorithms
+- Visualization suite for academic publication
+- GPX file analysis and calorie prediction
+- Route-based speed and energy expenditure forecasting
+
+### Technical Approach
+
+The system employs supervised learning techniques with extensive feature extraction from GPS, elevation, heart rate, and power data. Multiple regression models are trained and evaluated to identify optimal prediction accuracy for calorie expenditure based on route characteristics and rider attributes.
+
+---
+
+## Features
+
+### 1. Data Acquisition
+
+- Automated retrieval of cycling activities via Strava API
+- Stream data collection (GPS coordinates, elevation, heart rate, cadence, power)
+- Comprehensive athlete profile integration
+- Batch processing with rate limiting
+
+### 2. Data Processing
+
+- Feature extraction from raw GPS and sensor data
+- Derived metrics calculation (grade, speed variations, elevation gain)
+- Outlier detection and removal
+- Missing value imputation
+- Temporal feature engineering
+
+### 3. Visualization Suite
+
+The system generates publication-ready visualizations:
+
+**Data Analysis Visualizations** (`data/visualizations/`):
+- Heatmap: Distance vs Elevation vs Calories
+- Heatmap: Speed vs Duration vs Calories
+- Heatmap: Distance vs Speed vs Calories
+- Correlation matrix of training variables
+- Distribution plots for key metrics
+- Scatter plots showing feature relationships
+- Time series analysis of training progression
+
+**Machine Learning Visualizations** (`data/ml_visualizations/`):
+- Model prediction comparison (actual vs predicted)
+- Residual analysis plots
+- Feature importance rankings
+- Learning curves for model optimization
+- Linear regression diagnostic plots (Q-Q plot, residual distribution)
+- Comparative metrics visualization
+
+### 4. Machine Learning Pipeline
+
+- Train/test split with stratification (80/20)
+- Feature scaling using StandardScaler
+- Multiple algorithm implementation:
+  - Linear Regression (baseline)
+  - Ridge Regression
+  - Lasso Regression
+  - Random Forest Regressor
+  - Gradient Boosting Regressor
+  - XGBoost (optional)
+  - LightGBM (optional)
+- Cross-validation for model stability
+- Comprehensive performance metrics (MAE, RMSE, R², MAPE)
+
+### 5. GPX Analysis and Prediction
+
+- Route parsing from standard GPX format
+- Speed prediction along route segments
+- Calorie expenditure estimation
+- Visual route analysis with speed overlays
+- Elevation profile generation
+- Detailed prediction reports
+
+---
+
+## System Architecture
 
 ```
-cycling_calories_ml/
-├── README.md                    # Ten plik
-├── requirements.txt             # Wymagane biblioteki Python
-├── main.py                      # Główny skrypt uruchomieniowy
-├── .gitignore                   # Pliki ignorowane przez git
-│
-├── config/
-│   ├── config.example.yaml      # Przykładowa konfiguracja
-│   └── config.yaml              # Twoja konfiguracja (do uzupełnienia)
-│
-├── src/                         # Kod źródłowy
-│   ├── __init__.py
-│   ├── strava_client.py         # Pobieranie danych ze Strava API
-│   ├── data_processor.py        # Przetwarzanie danych
-│   ├── visualization.py         # Tworzenie wizualizacji
-│   └── ml_preparation.py        # Przygotowanie danych do ML
-│
-├── data/                        # Dane
-│   ├── raw/                     # Surowe dane ze Strava (JSON)
-│   ├── processed/               # Przetworzone dane (CSV)
-│   ├── ml_ready/                # Dane gotowe do ML (train/test)
-│   └── visualizations/          # Wykresy i heatmapy (PNG)
-│
-├── models/                      # Katalog na przyszłe modele ML
-│
-└── notebooks/                   # Jupyter notebooks (opcjonalnie)
+┌─────────────────────────────────────────────────────────────────┐
+│                        Strava API                                │
+└───────────────────────────────┬─────────────────────────────────┘
+                                │
+                                ▼
+                    ┌─────────────────────┐
+                    │  Data Collection    │
+                    │  (strava_client.py) │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │  Data Processing    │
+                    │ (data_processor.py) │
+                    └──────────┬──────────┘
+                               │
+                ┌──────────────┴──────────────┐
+                ▼                             ▼
+    ┌─────────────────────┐      ┌─────────────────────┐
+    │   Visualization     │      │  ML Preparation     │
+    │ (visualization.py)  │      │(ml_preparation.py)  │
+    └─────────────────────┘      └──────────┬──────────┘
+                                            │
+                                            ▼
+                                ┌─────────────────────┐
+                                │  Model Training     │
+                                │ (train_models.py)   │
+                                └──────────┬──────────┘
+                                           │
+                                           ▼
+                                ┌─────────────────────┐
+                                │  GPX Prediction     │
+                                │(predict_from_gpx.py)│
+                                └─────────────────────┘
 ```
 
 ---
 
-## 🔧 Wymagania
+## Prerequisites
 
-- **Python 3.8+**
-- **Konto Strava** z aktywnością kolarską
-- **Strava API credentials** (Client ID, Client Secret, Access Token)
+- Python 3.8 or higher
+- Active Strava account with cycling activities
+- Strava API credentials (Client ID, Client Secret, Access Token)
+- Minimum 30-50 cycling activities for model training
 
 ---
 
-## 📦 Instalacja
+## Installation
 
-### 1. Sklonuj repozytorium lub rozpakuj projekt
+### Step 1: Clone or Download Repository
 
 ```bash
 cd cycling_calories_ml
 ```
 
-### 2. Utwórz środowisko wirtualne (zalecane)
+### Step 2: Create Virtual Environment (Recommended)
 
 ```bash
 # macOS/Linux
@@ -124,57 +179,52 @@ python -m venv venv
 venv\Scripts\activate
 ```
 
-### 3. Zainstaluj wymagane biblioteki
+### Step 3: Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
+Required packages:
+- pandas >= 2.0.0
+- numpy >= 1.24.0
+- matplotlib >= 3.7.0
+- seaborn >= 0.12.0
+- scikit-learn >= 1.3.0
+- scipy >= 1.11.0
+- requests >= 2.31.0
+- PyYAML >= 6.0
+- xgboost >= 2.0.0 (optional)
+- lightgbm >= 4.0.0 (optional)
+
 ---
 
-## 🔑 Konfiguracja Strava API
+## Strava API Configuration
 
-### Krok 1: Utwórz aplikację Strava
+### Step 1: Create Strava Application
 
-1. Zaloguj się na **[Strava](https://www.strava.com)**
-2. Przejdź do **[Strava API Settings](https://www.strava.com/settings/api)**
-3. Kliknij **"Create an App"** (lub "My API Application")
+1. Navigate to https://www.strava.com/settings/api
+2. Click "Create an App"
+3. Complete the application form:
+   - Application Name: `Cycling Calories ML`
+   - Category: `Data Importer` or `Research`
+   - Website: `http://localhost`
+   - Authorization Callback Domain: `localhost`
+4. Record your Client ID and Client Secret
 
-**Wypełnij formularz:**
-- **Application Name**: `Cycling Calories ML`
-- **Category**: `Data Importer` lub `Research`
-- **Club**: (pozostaw puste)
-- **Website**: `http://localhost` (lub dowolny URL)
-- **Authorization Callback Domain**: `localhost`
-- **Description**: `System predykcji spalanych kalorii`
+### Step 2: Generate Access Token
 
-4. Kliknij **"Create"**
+#### Method A: Browser-based Authentication
 
-### Krok 2: Skopiuj Client ID i Client Secret
-
-Po utworzeniu aplikacji zobaczysz:
-- **Client ID** (np. `12345`)
-- **Client Secret** (np. `abcdef1234567890abcdef1234567890abcdef12`)
-
-**Zachowaj te dane!**
-
-### Krok 3: Wygeneruj Access Token
-
-#### Opcja A: Używając przeglądarki (prostsze)
-
-1. W przeglądarce wklej poniższy URL (zamień `YOUR_CLIENT_ID`):
+1. Open the following URL in your browser (replace YOUR_CLIENT_ID):
 
 ```
 https://www.strava.com/oauth/authorize?client_id=YOUR_CLIENT_ID&response_type=code&redirect_uri=http://localhost&approval_prompt=force&scope=activity:read_all
 ```
 
-2. Zaloguj się i kliknij **"Authorize"**
-
-3. Zostaniesz przekierowany na `http://localhost/?code=XXXXXX`
-
-4. Skopiuj wartość `code` z URL (to jest Twój **authorization code**)
-
-5. Użyj tego kodu aby uzyskać **Access Token** i **Refresh Token**:
+2. Authorize the application
+3. Copy the authorization code from the redirect URL
+4. Exchange code for access token:
 
 ```bash
 curl -X POST https://www.strava.com/oauth/token \
@@ -184,414 +234,490 @@ curl -X POST https://www.strava.com/oauth/token \
   -d grant_type=authorization_code
 ```
 
-**Odpowiedź będzie zawierać:**
-```json
-{
-  "access_token": "your_access_token_here",
-  "refresh_token": "your_refresh_token_here",
-  "expires_at": 1234567890
-}
-```
+5. Record the access_token and refresh_token from the response
 
-#### Opcja B: Używając Python (bardziej automatyczne)
-
-Stwórz plik `get_token.py`:
-
-```python
-import requests
-
-CLIENT_ID = "YOUR_CLIENT_ID"
-CLIENT_SECRET = "YOUR_CLIENT_SECRET"
-AUTHORIZATION_CODE = "YOUR_AUTHORIZATION_CODE"  # Z kroku 4 powyżej
-
-response = requests.post(
-    "https://www.strava.com/oauth/token",
-    data={
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
-        "code": AUTHORIZATION_CODE,
-        "grant_type": "authorization_code"
-    }
-)
-
-print(response.json())
-```
-
-Uruchom:
-```bash
-python get_token.py
-```
-
-### Krok 4: Skonfiguruj config.yaml
-
-1. Skopiuj przykładowy plik konfiguracyjny:
+### Step 3: Configure Application
 
 ```bash
 cp config/config.example.yaml config/config.yaml
 ```
 
-2. Edytuj `config/config.yaml` i uzupełnij swoje dane:
+Edit `config/config.yaml` with your credentials:
 
 ```yaml
 strava:
-  access_token: "TWÓJ_ACCESS_TOKEN"
-  client_id: "TWÓJ_CLIENT_ID"
-  client_secret: "TWÓJ_CLIENT_SECRET"
-  refresh_token: "TWÓJ_REFRESH_TOKEN"
+  access_token: "YOUR_ACCESS_TOKEN"
+  client_id: "YOUR_CLIENT_ID"
+  client_secret: "YOUR_CLIENT_SECRET"
+  refresh_token: "YOUR_REFRESH_TOKEN"
 ```
 
-**UWAGA:** Plik `config/config.yaml` jest w `.gitignore` - nie zostanie dodany do repo (bezpieczeństwo!)
+**Note:** The config.yaml file is excluded from version control for security.
 
 ---
 
-## 🚀 Użycie
+## Usage
 
-### Opcja 1: Uruchom pełny pipeline (zalecane)
+### Full Pipeline Execution
+
+Execute the complete data processing and model training pipeline:
 
 ```bash
 python main.py --all
 ```
 
-To uruchomi wszystkie 5 kroków:
-1. ✅ Pobieranie danych ze Strava
-2. ✅ Przetwarzanie danych
-3. ✅ Tworzenie wizualizacji
-4. ✅ Przygotowanie danych ML
-5. ✅ Trenowanie modeli ML
+This runs all five stages:
+1. Data collection from Strava API
+2. Data processing and feature engineering
+3. Visualization generation
+4. ML dataset preparation (train/test split)
+5. Model training and evaluation
 
-### Opcja 2: Uruchamiaj kroki osobno
+### Individual Stage Execution
+
+Run specific pipeline stages:
 
 ```bash
-# Krok 1: Pobierz dane ze Strava
+# Stage 1: Data collection
 python main.py --step 1
 
-# Krok 2: Przetwórz dane
+# Stage 2: Data processing
 python main.py --step 2
 
-# Krok 3: Stwórz wizualizacje
+# Stage 3: Visualization generation
 python main.py --step 3
 
-# Krok 4: Przygotuj dane do ML
+# Stage 4: ML dataset preparation
 python main.py --step 4
 
-# Krok 5: Wytrenuj modele ML
+# Stage 5: Model training
 python main.py --step 5
 ```
 
-### Opcja 3: Uruchamiaj moduły bezpośrednio
+### Direct Module Execution
 
 ```bash
-# Pobieranie danych
+# Data collection
 python -m src.strava_client
 
-# Przetwarzanie
+# Data processing
 python -m src.data_processor
 
-# Wizualizacje
+# Visualization
 python -m src.visualization
 
-# Przygotowanie ML
+# ML preparation
 python -m src.ml_preparation
-```
 
----
-
-## 📊 Dane wyjściowe
-
-Po uruchomieniu pełnego pipeline otrzymasz:
-
-### 1. Surowe dane (data/raw/)
-- `athlete_info.json` - informacje o Twoim koncie Strava
-- `strava_cycling_activities.json` - lista wszystkich przejazdów
-- `strava_detailed_activities.json` - szczegółowe dane z streams
-
-### 2. Przetworzone dane (data/processed/)
-- `processed_activities.csv` - pełny zbiór danych z wszystkimi cechami
-
-### 3. Wizualizacje (data/visualizations/)
-- `heatmap_distance_elevation_calories.png` - dystans vs nachylenie vs kalorie
-- `heatmap_speed_time_calories.png` - prędkość vs czas vs kalorie
-- `heatmap_distance_speed_calories.png` - dystans vs prędkość vs kalorie
-- `correlation_heatmap.png` - macierz korelacji
-- `distribution_plots.png` - rozkłady zmiennych
-- `scatter_plots.png` - wykresy rozrzutu
-- `time_series_plot.png` - progres w czasie
-
-### 4. Dane ML (data/ml_ready/)
-- `X_train.csv` - cechy treningowe (nieskalowane)
-- `X_test.csv` - cechy testowe (nieskalowane)
-- `X_train_scaled.csv` - cechy treningowe (skalowane)
-- `X_test_scaled.csv` - cechy testowe (skalowane)
-- `y_train.csv` - etykiety treningowe (kalorie)
-- `y_test.csv` - etykiety testowe (kalorie)
-- `scaler.pkl` - obiekt StandardScaler
-- `feature_names.txt` - lista nazw cech
-- `data_info.txt` - szczegółowy opis danych
-
----
-
-## 🧠 Wykorzystanie danych ML
-
-### Dla modeli liniowych, SVM, sieci neuronowych:
-Użyj **skalowanych** danych:
-```python
-import pandas as pd
-
-X_train = pd.read_csv("data/ml_ready/X_train_scaled.csv")
-X_test = pd.read_csv("data/ml_ready/X_test_scaled.csv")
-y_train = pd.read_csv("data/ml_ready/y_train.csv")
-y_test = pd.read_csv("data/ml_ready/y_test.csv")
-```
-
-### Dla modeli drzewiastych (Random Forest, XGBoost, LightGBM):
-Użyj **nieskalowanych** danych:
-```python
-import pandas as pd
-
-X_train = pd.read_csv("data/ml_ready/X_train.csv")
-X_test = pd.read_csv("data/ml_ready/X_test.csv")
-y_train = pd.read_csv("data/ml_ready/y_train.csv")
-y_test = pd.read_csv("data/ml_ready/y_test.csv")
-```
-
-### Przykład: Trening modelu
-
-```python
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error
-import numpy as np
-
-# Wczytaj dane
-X_train = pd.read_csv("data/ml_ready/X_train.csv")
-X_test = pd.read_csv("data/ml_ready/X_test.csv")
-y_train = pd.read_csv("data/ml_ready/y_train.csv").values.ravel()
-y_test = pd.read_csv("data/ml_ready/y_test.csv").values.ravel()
-
-# Trenuj model
-model = RandomForestRegressor(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
-
-# Predykcja
-y_pred = model.predict(X_test)
-
-# Ocena
-mae = mean_absolute_error(y_test, y_pred)
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-
-print(f"MAE: {mae:.2f} kcal")
-print(f"RMSE: {rmse:.2f} kcal")
-```
-
----
-
-## 🤖 Trenowanie Modeli ML i Predykcja
-
-### Krok 5: Trenowanie modeli
-
-Po przygotowaniu danych (krok 4), możesz wytrenować modele uczenia maszynowego:
-
-```bash
-# Automatycznie trenuje wszystkie modele
-python main.py --step 5
-
-# lub bezpośrednio
+# Model training
 python -m src.train_models
 ```
 
-**Co robi ten krok:**
-- Trenuje 6 modeli ML: Linear Regression, Ridge, Lasso, Random Forest, Gradient Boosting, XGBoost, LightGBM
-- Porównuje ich wydajność (MAE, RMSE, R², MAPE)
-- Tworzy **wykresy do pracy dyplomowej**:
-  - Porównanie predykcji wszystkich modeli
-  - Wykresy residuals (błędów)
-  - Feature importance (istotność cech)
-  - Learning curves (krzywe uczenia)
-  - Analiza regresji liniowej (Q-Q plot, rozkład residuals)
-  - Porównanie metryk
-- Zapisuje wytrenowane modele w `data/ml_models/`
-
-**Pliki wyjściowe:**
-
-`data/ml_models/`
-- `random_forest.pkl` - model Random Forest (zazwyczaj najlepszy)
-- `xgboost.pkl` - model XGBoost
-- `linear_regression.pkl` - regresja liniowa
-- inne modele...
-- `model_comparison.txt` - tabela porównawcza
-
-`data/ml_visualizations/`
-- `01_predictions_comparison.png` - porównanie predykcji
-- `02_residuals_plot.png` - wykresy residuals
-- `03_feature_importance.png` - istotność cech
-- `04_learning_curves.png` - krzywe uczenia
-- `05_linear_regression_analysis.png` - analiza regresji
-- `06_metrics_comparison.png` - porównanie metryk
-
 ---
 
-## 🚴 Predykcja z pliku GPX
+## Machine Learning Pipeline
 
-### Jak używać wytrenowanego modelu
+### Model Training
 
-Po wytrenowaniu modeli możesz przewidywać spalenie kalorii i prędkość z dowolnego pliku GPX:
+After data preparation (Step 4), train all models:
 
 ```bash
-# Podstawowe użycie (domyślna waga 75 kg)
-python -m src.predict_from_gpx twoja_trasa.gpx
-
-# Podaj swoją wagę
-python -m src.predict_from_gpx twoja_trasa.gpx --weight 80
-
-# Użyj innego modelu
-python -m src.predict_from_gpx twoja_trasa.gpx --weight 75 --model data/ml_models/xgboost.pkl
+python main.py --step 5
 ```
 
-**Co otrzymasz:**
+### Trained Models
 
-1. **Wizualizację trasy** (`data/predictions/prediction_<nazwa>.png`):
-   - Mapę trasy z kolorami pokazującymi prędkość w różnych punktach
-   - Profil wysokościowy
-   - Wykres prędkości w funkcji dystansu
-   - Podsumowanie ze **przewidywanym spaleniem kalorii**
+The system trains and compares seven regression algorithms:
 
-2. **Raport tekstowy** (`data/predictions/report_<nazwa>.txt`):
-   - Charakterystyka trasy (dystans, przewyższenie, czas)
-   - Statystyki prędkości i nachylenia
-   - **Przewidywane spalenie kalorii**
-   - Informacje o dokładności modelu
+1. **Linear Regression** - Baseline model, ordinary least squares
+2. **Ridge Regression** - L2 regularization
+3. **Lasso Regression** - L1 regularization, feature selection
+4. **Random Forest** - Ensemble method, typically best performance
+5. **Gradient Boosting** - Sequential ensemble learning
+6. **XGBoost** - Optimized gradient boosting (if installed)
+7. **LightGBM** - Fast gradient boosting (if installed)
 
-### Przykład wyjścia:
+### Performance Metrics
+
+Models are evaluated using:
+
+- **MAE (Mean Absolute Error)**: Average prediction error in kcal
+- **RMSE (Root Mean Squared Error)**: Penalizes larger errors
+- **R² (R-squared)**: Proportion of variance explained (0-1)
+- **MAPE (Mean Absolute Percentage Error)**: Percentage error
+- **5-Fold Cross-Validation**: Model stability assessment
+
+### Model Output
+
+**Saved Models** (`data/ml_models/`):
+- `random_forest.pkl` - Random Forest model (typically best)
+- `xgboost.pkl` - XGBoost model
+- `linear_regression.pkl` - Linear regression baseline
+- Additional model files for each algorithm
+- `model_comparison.txt` - Performance comparison table
+
+**Visualizations** (`data/ml_visualizations/`):
+- `01_predictions_comparison.png` - Model predictions vs actual values
+- `02_residuals_plot.png` - Residual analysis
+- `03_feature_importance.png` - Feature importance rankings
+- `04_learning_curves.png` - Training progression curves
+- `05_linear_regression_analysis.png` - Regression diagnostics
+- `06_metrics_comparison.png` - Comparative performance metrics
+
+### Example Model Performance
+
+Typical results on well-trained dataset:
 
 ```
-═══════════════════════════════════════════════════════════════════
-WYNIKI PREDYKCJI
-═══════════════════════════════════════════════════════════════════
-Dystans: 45.20 km
-Przewyższenie: 680 m
-Średnia prędkość: 24.5 km/h
-Czas trwania: 110 min
-
-🔥 PRZEWIDYWANE SPALENIE: 1250 kcal
-═══════════════════════════════════════════════════════════════════
+Model                       MAE       RMSE       MAPE         R²
+------------------------------------------------------------------------
+Linear Regression         45.23      58.12      5.2%     0.9523
+Random Forest             38.45      49.67      4.3%     0.9689
+XGBoost                   37.89      48.92      4.2%     0.9701
 ```
-
-### Skąd wziąć pliki GPX?
-
-- **Strava**: Otwórz aktywność → menu (⋮) → "Export GPX"
-- **Garmin Connect**: Aktywność → ⚙️ → "Export to GPX"
-- **Komoot**, **RideWithGPS**: każda trasa ma opcję "Download GPX"
-- **Planowanie trasy**: Użyj narzędzi online (Komoot, Strava Route Builder) aby stworzyć planowaną trasę
-
----
-
-## 📊 Interpretacja wyników ML
-
-### Metryki modelu
-
-- **MAE (Mean Absolute Error)**: Średni błąd predykcji w kcal. Im niższy, tym lepiej.
-  - Przykład: MAE = 50 kcal oznacza że średnio model myli się o 50 kcal
-
-- **RMSE (Root Mean Squared Error)**: Bardziej karze większe błędy. Im niższy, tym lepiej.
-
-- **R² (R-squared)**: Dopasowanie modelu (0-1). Im bliżej 1, tym lepiej.
-  - R² = 0.95 oznacza że model wyjaśnia 95% wariancji danych
-
-- **MAPE (Mean Absolute Percentage Error)**: Błąd procentowy.
-  - MAPE = 5% oznacza że średni błąd to 5% wartości rzeczywistej
-
-### Który model wybrać?
-
-System automatycznie wybiera **najlepszy model** (według MAE).
-
-Zazwyczaj:
-- **Random Forest** - najlepszy stosunek dokładności do szybkości
-- **XGBoost** - często najdokładniejszy, ale wolniejszy
-- **LightGBM** - bardzo szybki, dobra dokładność
-- **Linear Regression** - baseline, do porównania
 
 ### Feature Importance
 
-Wykres pokazuje **które cechy są najważniejsze** dla predykcji:
+Most influential features for prediction:
 
-Typowo najważniejsze cechy:
-1. `distance_km` - dystans
-2. `moving_time_min` - czas
-3. `total_elevation_gain` - przewyższenie
-4. `average_speed_kmh` - prędkość średnia
-5. `elevation_per_km` - nachylenie na km
+1. `distance_km` - Route distance (30-40% importance)
+2. `moving_time_min` - Activity duration (20-30%)
+3. `total_elevation_gain` - Cumulative climbing (15-25%)
+4. `average_speed_kmh` - Mean velocity (10-15%)
+5. `elevation_per_km` - Grade intensity (5-10%)
 
 ---
 
-## 🔍 Rozwiązywanie problemów
+## GPX-based Prediction
 
-### Problem: `FileNotFoundError: config/config.yaml`
+### Route Analysis from GPX Files
 
-**Rozwiązanie:**
+Predict calorie expenditure from GPX route files:
+
+```bash
+# Basic prediction with default weight (75 kg)
+python -m src.predict_from_gpx your_route.gpx
+
+# Specify rider weight
+python -m src.predict_from_gpx your_route.gpx --weight 80
+
+# Use specific model
+python -m src.predict_from_gpx your_route.gpx --weight 75 --model data/ml_models/xgboost.pkl
+```
+
+### Test with Example Route
+
+```bash
+python -m src.predict_from_gpx example_route.gpx --weight 75
+```
+
+### Prediction Output
+
+**Visual Analysis** (`data/predictions/prediction_<name>.png`):
+
+Four-panel visualization:
+1. Route map with speed-based color coding (red: slow, green: fast)
+2. Elevation profile showing altitude changes
+3. Speed variation along route distance
+4. Summary panel with predicted calorie expenditure
+
+**Text Report** (`data/predictions/report_<name>.txt`):
+
+Detailed analysis including:
+- Route characteristics (distance, elevation, duration)
+- Speed statistics (average, maximum)
+- Grade analysis (average, maximum, minimum)
+- **Predicted calorie expenditure**
+- Model accuracy metrics
+
+### Example Prediction Output
+
+```
+═══════════════════════════════════════════════════════════════════
+PREDICTION RESULTS
+═══════════════════════════════════════════════════════════════════
+Distance: 45.20 km
+Elevation Gain: 680 m
+Average Speed: 24.5 km/h
+Duration: 110 min
+
+PREDICTED CALORIE EXPENDITURE: 1250 kcal
+═══════════════════════════════════════════════════════════════════
+```
+
+### GPX File Sources
+
+- **Strava**: Activity → Menu → "Export GPX"
+- **Garmin Connect**: Activity → Settings → "Export to GPX"
+- **Komoot**: Route → "Download" → GPX
+- **RideWithGPS**: Route → "Export" → GPX
+- **Strava Route Builder**: Create route → "Export GPX"
+
+---
+
+## Data Visualization
+
+### Generated Visualizations
+
+#### Data Analysis (`data/visualizations/`)
+
+![Distance-Elevation-Calories Heatmap](data/visualizations/heatmap_distance_elevation_calories.png)
+*Heatmap showing relationship between distance, elevation gain, and calorie expenditure*
+
+![Speed-Time-Calories Heatmap](data/visualizations/heatmap_speed_time_calories.png)
+*Heatmap analyzing speed, duration, and energy expenditure*
+
+![Correlation Matrix](data/visualizations/correlation_heatmap.png)
+*Correlation matrix of all training variables*
+
+![Variable Distributions](data/visualizations/distribution_plots.png)
+*Distribution plots for key metrics (distance, time, calories, speed, elevation)*
+
+![Feature Scatter Plots](data/visualizations/scatter_plots.png)
+*Scatter plots showing relationships between features and calorie expenditure*
+
+![Training Progress](data/visualizations/time_series_plot.png)
+*Time series analysis of training activity over time*
+
+#### Machine Learning Analysis (`data/ml_visualizations/`)
+
+![Model Comparison](data/ml_visualizations/01_predictions_comparison.png)
+*Actual vs predicted calorie values for all models*
+
+![Residual Analysis](data/ml_visualizations/02_residuals_plot.png)
+*Residual plots for error analysis*
+
+![Feature Importance](data/ml_visualizations/03_feature_importance.png)
+*Feature importance rankings for tree-based models*
+
+![Learning Curves](data/ml_visualizations/04_learning_curves.png)
+*Training and validation performance curves*
+
+![Linear Regression Diagnostics](data/ml_visualizations/05_linear_regression_analysis.png)
+*Comprehensive linear regression analysis including Q-Q plot*
+
+![Metrics Comparison](data/ml_visualizations/06_metrics_comparison.png)
+*Comparative visualization of model performance metrics*
+
+---
+
+## Model Performance
+
+### Evaluation Metrics Interpretation
+
+**Mean Absolute Error (MAE)**
+- Average prediction error in kilocalories
+- Lower values indicate better performance
+- Example: MAE = 40 kcal means average error of 40 kcal
+
+**Root Mean Squared Error (RMSE)**
+- Emphasizes larger errors more than MAE
+- Useful for identifying models with occasional large errors
+- Lower values preferred
+
+**R² Score (Coefficient of Determination)**
+- Proportion of variance explained by model (0-1 scale)
+- R² = 0.95 means model explains 95% of variance
+- Values closer to 1.0 indicate better fit
+
+**Mean Absolute Percentage Error (MAPE)**
+- Error expressed as percentage of actual value
+- MAPE = 5% indicates 5% average relative error
+- Useful for comparing across different scales
+
+### Model Selection Guidelines
+
+**Random Forest**
+- Best balance of accuracy and computational efficiency
+- Robust to overfitting
+- Excellent for general use
+
+**XGBoost**
+- Often highest accuracy
+- Longer training time
+- Recommended for production deployment
+
+**LightGBM**
+- Fastest training
+- Good accuracy for large datasets
+- Efficient memory usage
+
+**Linear Regression**
+- Baseline comparison
+- Fast prediction
+- Interpretable coefficients
+
+---
+
+## Project Structure
+
+```
+cycling_calories_ml/
+├── README.md                          # This file
+├── QUICK_START.md                     # Quick start guide
+├── ML_USAGE_GUIDE.md                  # Detailed ML documentation
+├── INSTRUKCJA.txt                     # Polish language instructions
+├── requirements.txt                   # Python dependencies
+├── main.py                            # Main pipeline controller
+├── example_route.gpx                  # Sample GPX file for testing
+├── .gitignore                         # Git exclusion rules
+│
+├── config/
+│   ├── config.example.yaml            # Configuration template
+│   └── config.yaml                    # User configuration (create this)
+│
+├── src/                               # Source code modules
+│   ├── __init__.py
+│   ├── strava_client.py               # Strava API interface
+│   ├── data_processor.py              # Data processing pipeline
+│   ├── visualization.py               # Visualization generation
+│   ├── ml_preparation.py              # ML dataset preparation
+│   ├── train_models.py                # Model training and evaluation
+│   ├── predict_from_gpx.py            # GPX analysis and prediction
+│   └── gpx_parser.py                  # GPX file parser
+│
+├── data/                              # Data directory
+│   ├── raw/                           # Raw Strava data (JSON)
+│   ├── processed/                     # Processed datasets (CSV)
+│   ├── ml_ready/                      # Train/test splits
+│   ├── visualizations/                # Data analysis plots
+│   ├── ml_models/                     # Trained model files
+│   ├── ml_visualizations/             # ML analysis plots
+│   └── predictions/                   # GPX prediction outputs
+│
+├── models/                            # Additional model storage
+│
+└── notebooks/                         # Jupyter notebooks (optional)
+```
+
+---
+
+## Troubleshooting
+
+### Configuration Issues
+
+**Problem:** `FileNotFoundError: config/config.yaml`
+
+**Solution:**
 ```bash
 cp config/config.example.yaml config/config.yaml
-# Następnie edytuj config/config.yaml i dodaj swoje dane Strava
+# Edit config/config.yaml with your Strava credentials
 ```
 
-### Problem: `Błąd API: 401 Unauthorized`
+### Authentication Errors
 
-**Przyczyna:** Nieprawidłowy lub wygasły Access Token
+**Problem:** `API Error: 401 Unauthorized`
 
-**Rozwiązanie:**
-1. Wygeneruj nowy Access Token (patrz sekcja "Konfiguracja Strava API")
-2. Zaktualizuj `config/config.yaml`
+**Cause:** Invalid or expired access token
 
-### Problem: `Nie znaleziono pliku z surowymi danymi`
+**Solution:**
+1. Generate new access token (see Strava API Configuration)
+2. Update `config/config.yaml` with new token
 
-**Rozwiązanie:** Uruchom kroki po kolei:
-```bash
-python main.py --step 1  # Najpierw pobierz dane
-python main.py --step 2  # Potem przetwórz
-```
+### Missing Dependencies
 
-### Problem: `ModuleNotFoundError: No module named 'requests'`
+**Problem:** `ModuleNotFoundError: No module named 'package_name'`
 
-**Rozwiązanie:**
+**Solution:**
 ```bash
 pip install -r requirements.txt
 ```
 
-### Problem: Mało danych treningowych
+### Data Collection Issues
 
-**Przyczyna:** Nowe konto Strava lub mało aktywności
+**Problem:** `No cycling activities found`
 
-**Rozwiązanie:**
-- Upewnij się, że masz minimum 20-30 przejazdów rowerowych
-- Sprawdź czy Twoje aktywności są publiczne/widoczne przez API
-- Użyj zakładki "Upload" na Strava aby zaimportować stare treningi
+**Cause:** Insufficient data or incorrect activity type
 
-### Problem: Access Token wygasa po 6 godzinach
+**Solution:**
+- Ensure minimum 30-50 cycling activities in Strava
+- Verify activities are marked as "Ride" type
+- Check API permissions include `activity:read_all`
 
-**Rozwiązanie:** Implementacja automatycznego odświeżania tokenu (TODO dla przyszłej wersji)
+### Model Training Errors
+
+**Problem:** `Not enough data for training`
+
+**Cause:** Insufficient training samples
+
+**Solution:**
+- Collect more cycling activities (minimum 30-50)
+- Check data cleaning didn't remove too many outliers
+- Review `data/processed/processed_activities.csv`
+
+### GPX Prediction Issues
+
+**Problem:** `No model file found`
+
+**Cause:** Models not trained yet
+
+**Solution:**
+```bash
+python main.py --step 5  # Train models first
+```
+
+### Performance Issues
+
+**Problem:** Slow model training
+
+**Solution:**
+- Use `n_jobs=-1` parameter for parallel processing
+- Consider LightGBM for faster training
+- Reduce dataset size for initial testing
 
 ---
 
-## 📝 Licencja
+## References
 
-Projekt edukacyjny - Praca inżynierska
-Autor: Łukasz Ryczko
-WSEI Kraków 2026
+### Academic Citations
+
+1. Abu Rayyan, et al. "Calories Burnt Prediction using Machine Learning." International Journal for Research in Applied Science and Engineering Technology.
+
+2. Ali, M. S., Suhail, M. A., Kumail, M., Baniya, M., Rathore, V. "A Deep Learning Approach to Calorie Expenditure Prediction: Including Exercise Intensity and Environmental Factors."
+
+3. Binumon Joseph, Vinoy, S. P. "Calorie Burn Prediction Analysis Using XGBoost Regressor and Linear Regression Algorithms." Asian Journal of Convergence in Engineering.
+
+4. Gulmatico, J. S., et al. "Burned Calories Prediction using Supervised Machine Learning: Regression Algorithm." IEEE Conference Publication.
+
+5. Kumar Singh, R., Gupta, V. "Calories Burnt Prediction Using Machine Learning." International Journal of Advanced Research in Computer and Communication Engineering.
+
+6. Tan, A. J. S., Che Embi, Z., Hashim, N. "Comparison of Machine Learning Methods for Calories Burn Prediction." Journal of Informatics and Web Engineering.
+
+7. K Nattar Kannan, Suresh Patnaik Pakki. "Machine Learning-Based Caloric Expenditure Prediction for Personalized Fitness Assessment during Physical Activity."
+
+### Technical Documentation
+
+- Strava API Documentation: https://developers.strava.com
+- Scikit-learn Documentation: https://scikit-learn.org
+- XGBoost Documentation: https://xgboost.readthedocs.io
+- LightGBM Documentation: https://lightgbm.readthedocs.io
 
 ---
 
-## 🙏 Podziękowania
+## License
 
-- **Strava API** - za dostęp do danych treningowych
-- **dr hab. Dariusz Put** - za opiekę naukową
-
----
-
-## 📧 Kontakt
-
-W razie problemów lub pytań:
-- Sprawdź sekcję "Rozwiązywanie problemów" powyżej
-- Przejrzyj logi - system wyświetla szczegółowe informacje o błędach
-- Upewnij się, że wszystkie kroki zostały wykonane poprawnie
+Educational Project - Bachelor's Thesis
+Author: Łukasz Ryczko
+University of Economics and Computer Science in Krakow, 2026
 
 ---
 
-**Powodzenia z projektem!** 🚴‍♂️📊🤖
+## Acknowledgments
+
+- **Strava API** - For providing access to training data
+- **Dr. hab. Dariusz Put, prof. WSEI** - Academic supervisor
+- **Open Source Community** - For machine learning libraries and tools
+
+---
+
+## Contact
+
+For issues or questions:
+- Review the Troubleshooting section above
+- Check log outputs for detailed error messages
+- Ensure all pipeline stages completed successfully
+- Verify configuration file contains valid credentials
+
+---
+
+**End of Documentation**

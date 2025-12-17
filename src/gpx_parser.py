@@ -165,14 +165,14 @@ class GPXParser:
             df['speed_kmh'] = df['speed_ms'] * 3.6
 
         # Wygładzone wartości (rolling average)
-        window = 5
-        if len(df) >= window:
-            df['speed_smooth'] = df['speed_kmh'].rolling(window=window, center=True).mean()
-            if 'grade' in df.columns:
-                df['grade_smooth'] = df['grade'].rolling(window=window, center=True).mean()
-        else:
-            df['speed_smooth'] = df.get('speed_kmh', 0)
-            df['grade_smooth'] = df.get('grade', 0)
+        # window = 5
+        # if len(df) >= window:
+        #     df['speed_smooth'] = df['speed_kmh'].rolling(window=window, center=True).mean()
+        #     if 'grade' in df.columns:
+        #         df['grade_smooth'] = df['grade'].rolling(window=window, center=True).mean()
+        # else:
+        #     df['speed_smooth'] = df.get('speed_kmh', 0)
+        #     df['grade_smooth'] = df.get('grade', 0)
 
         # Wypełnij NaN
         df = df.fillna(0)
