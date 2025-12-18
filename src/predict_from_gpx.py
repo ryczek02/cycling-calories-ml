@@ -200,7 +200,7 @@ class CaloriePredictor:
         # 3. Prędkość w funkcji dystansu
         ax = axes[1, 0]
         distance_km = df_with_speed['cumulative_distance'] / 1000
-        ax.plot(distance_km, df_with_speed['speed_smooth'], linewidth=2, color='blue', label='Prędkość')
+        # ax.plot(distance_km, df_with_speed['speed_smooth'], linewidth=2, color='blue', label='Prędkość')
         ax.axhline(y=result['route_summary']['avg_speed_kmh'], color='red',
                   linestyle='--', label=f"Średnia: {result['route_summary']['avg_speed_kmh']:.1f} km/h")
         ax.set_xlabel('Dystans [km]', fontsize=11)
