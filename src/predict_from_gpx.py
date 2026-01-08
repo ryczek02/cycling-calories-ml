@@ -306,16 +306,6 @@ Waga sportowca: {result['athlete_weight']:.0f} kg
             f.write(f"R² (dopasowanie):         {self.model_data['metrics']['test_r2']:.4f}\n")
             f.write(f"MAPE (błąd %):            {self.model_data['metrics']['test_mape']:.2f}%\n\n")
 
-            f.write("UWAGI\n")
-            f.write("-"*70 + "\n")
-            f.write("- Predykcja oparta na modelu uczenia maszynowego\n")
-            f.write("- Rzeczywiste spalenie może się różnić w zależności od:\n")
-            f.write("  * kondycji fizycznej\n")
-            f.write("  * warunków pogodowych\n")
-            f.write("  * typu roweru\n")
-            f.write("  * oporu powietrza\n")
-            f.write("  * techniki jazdy\n")
-
         logger.info(f"✓ Raport zapisany: {output_file}")
 
 
@@ -340,7 +330,7 @@ def main():
         result = predictor.predict_calories(args.gpx_file, athlete_weight=args.weight)
 
         # Wizualizuj trasę
-        predictor.visualize_route_with_speed(result)
+        # predictor.visualize_route_with_speed(result)
 
         # Utwórz raport
         predictor.create_detailed_report(result)

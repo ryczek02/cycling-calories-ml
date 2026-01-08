@@ -1,0 +1,40 @@
+======================================================================
+RAPORT PREDYKCJI SPALONYCH KALORII
+======================================================================
+
+Plik GPX: sample_gpx/puszcza.gpx
+Model: data/ml_models/xgboost.pkl
+Waga sportowca: 80 kg
+
+CHARAKTERYSTYKA TRASY
+----------------------------------------------------------------------
+Dystans całkowity:        87.01 km
+Przewyższenie (↑):        456 m
+Zjazd (↓):                540 m
+Czas trwania:             261 min (4.4 h)
+
+PRĘDKOŚĆ
+----------------------------------------------------------------------
+Średnia prędkość:         20.0 km/h
+Maksymalna prędkość:      40.0 km/h
+
+NACHYLENIE
+----------------------------------------------------------------------
+Średnie nachylenie:       -0.01%
+Maksymalne nachylenie:    91.78%
+Minimalne nachylenie:     -89.47%
+Przewyższenie na km:      5.2 m/km
+
+======================================================================
+WYNIK PREDYKCJI
+======================================================================
+🔥 Przewidywane spalenie: 988 kcal
+======================================================================
+
+DOKŁADNOŚĆ MODELU
+----------------------------------------------------------------------
+MAE (błąd średni):        4.57 kcal
+RMSE:                     6.16 kcal
+R² (dopasowanie):         0.9856
+MAPE (błąd %):            6.13%
+
